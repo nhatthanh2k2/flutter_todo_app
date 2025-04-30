@@ -14,5 +14,10 @@
   "create_task_name_label": "Add Task",
   "create_task_name_placeholder": "Enter task name here",
   "create_task_desc_label": "Description",
-  "create_task_desc_placeholder": "Enter task description here"
+  "create_task_desc_placeholder": "Enter task description here",
+  "create_list_page_title": "Choose category",
+  "create_list_add_category_button": "Add category",
+  "create_list_edit_category_button": "Edit category",
+  "edit_category_page_title": "Edit category",
+  "edit_category_edit_button": "Edit category"
 }
