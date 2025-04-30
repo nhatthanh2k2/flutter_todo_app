@@ -7,6 +7,11 @@
   "create_category_form_category_name_placeholder": "Category name",
   "create_category_form_category_icon_label": "Category icon:",
   "create_category_form_category_icon_placeholder": "Choose icon from library",
-  "create_category_form_category_background_color_label": "Category color:",
-  "create_category_create_button": "Create category"
+  "create_category_form_category_background_color_label": "Category background color:",
+  "create_category_form_category_icon_and_text_color_label": "Category icon & text color:",
+  "create_category_create_button": "Create category",
+  "create_task_name_label": "Add Task",
+  "create_task_name_placeholder": "Enter task name here",
+  "create_task_desc_label": "Description",
+  "create_task_desc_placeholder": "Enter task description here"
 }

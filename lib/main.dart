@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todo_app/ui/category/create_or_edit_category.dart';
+import 'package:todo_app/ui/main/main_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +33,7 @@ class TodoApp extends StatelessWidget {
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       debugShowCheckedModeBanner: false,
-      home: const CreateOrEditCategory(),
+      home: const MainPage(),
     );
   }
 }
