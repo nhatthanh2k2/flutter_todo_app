@@ -16,7 +16,7 @@ class CreateOrEditCategory extends StatefulWidget {
 
 class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
   final _nameCategoryTextController = TextEditingController();
-  final List<Color> _colorDataSource = [];
+  //final List<Color> _colorDataSource = [];
   Color _colorBackgroundSelected = const Color(0xFFC9CC41);
   Color _colorIconAndTextSelected = const Color(0xFF21A300);
   IconData? _iconSelected;
@@ -333,7 +333,7 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
         Navigator.pop(context);
       }
     } catch (e) {
-      print(e);
+      //print(e);
       _showAlert("Failure", "Create category failure!");
     }
   }
@@ -428,7 +428,7 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
         Navigator.pop(context);
       }
     } catch (e) {
-      print(e);
+      //print(e);
       _showAlert("Failure", "Edit category failure!");
     }
   }

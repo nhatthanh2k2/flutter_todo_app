@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/models/category_model.dart';
 import 'package:todo_app/ui/category/category_list_page.dart';
+import 'package:todo_app/ui/task_priority/task_priority_list_page.dart';
 import 'package:todo_app/utils/color_extension.dart';
 
 class CreateTaskPage extends StatefulWidget {
@@ -15,6 +16,8 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   final _nameTaskTextController = TextEditingController();
   final _descTaskTextController = TextEditingController();
   CategoryModel? _categorySelected;
+  DateTime? _taskDateTimeSelected;
+  int? _taskPrioritySelected;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,9 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         children: [
           _buildTaskNameField(),
           _buildTaskDescField(),
+          if (_taskDateTimeSelected != null) _buildTaskDateTime(),
           if (_categorySelected != null) _buildTaskCategory(),
+          if (_taskPrioritySelected != null) _buildTaskPriority(),
           _buildTaskActionField(),
         ],
       ),
@@ -124,12 +129,12 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
   Widget _buildTaskCategory() {
     return Container(
       margin: EdgeInsets.only(top: 15),
-      child: Column(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "Task category",
+            "Task category:",
             style: TextStyle(
               fontSize: 18,
               color: Colors.white.withValues(alpha: 0.87),
@@ -137,8 +142,94 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 10),
+            margin: const EdgeInsets.only(left: 10),
             child: _buildGridCategoryItem(_categorySelected!),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTaskDateTime() {
+    return Container(
+      margin: const EdgeInsets.only(top: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "Task time:",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white.withValues(alpha: 0.87),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Color(0xFF8687E7)),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                DateFormat("dd-MM-yyyy HH:mm").format(_taskDateTimeSelected!),
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.white.withValues(alpha: 0.87),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTaskPriority() {
+    return Container(
+      margin: EdgeInsets.only(top: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            "Task priority:",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white.withValues(alpha: 0.87),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 10),
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Color(0xFF8687E7)),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Row(
+                children: [
+                  Image.asset(
+                    "assets/images/flag.png",
+                    width: 24,
+                    height: 24,
+                    fit: BoxFit.fill,
+                  ),
+                  Text(
+                    _taskPrioritySelected!.toString(),
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.white.withValues(alpha: 0.87),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -187,7 +278,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
 
   Widget _buildTaskActionField() {
     return Container(
-      margin: EdgeInsets.only(top: 15),
+      margin: EdgeInsets.only(top: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,7 +289,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: _selectTaskTime,
                   icon: Image.asset(
                     "assets/images/timer.png",
                     width: 24,
@@ -216,7 +307,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: _showDialogChoosePriority,
                   icon: Image.asset(
                     "assets/images/flag.png",
                     width: 24,
@@ -242,6 +333,27 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
     );
   }
 
+  void _showDialogChoosePriority() async {
+    final result = await showGeneralDialog(
+      context: context,
+      barrierLabel: "",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      pageBuilder: (_, __, ___) {
+        return TaskPriorityListPage();
+      },
+    );
+
+    //print(result);
+
+    if (result != null && result is Map<String, dynamic>) {
+      final priority = result["priority"];
+      setState(() {
+        _taskPrioritySelected = priority;
+      });
+    } else {}
+  }
+
   void _showDialogChooseCategory() async {
     final result = await showGeneralDialog(
       context: context,
@@ -253,7 +365,7 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
       },
     );
 
-    print(result);
+    //print(result);
 
     if (result != null && result is Map<String, dynamic>) {
       final categoryId = result["categoryId"];
@@ -277,5 +389,59 @@ class _CreateTaskPageState extends State<CreateTaskPage> {
         _categorySelected = categoryModel;
       });
     } else {}
+  }
+
+  void _selectTaskTime() async {
+    final date = await showDatePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Color(0xFF8687E7),
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (date == null) {
+      return;
+    }
+    if (!context.mounted) {
+      return;
+    }
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: Color(0xFF8687E7),
+              onSurface: Colors.white,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (time == null) {
+      return;
+    }
+
+    final dateTimeSelected = date.copyWith(
+      hour: time.hour,
+      minute: time.minute,
+      second: 0,
+    );
+
+    setState(() {
+      _taskDateTimeSelected = dateTimeSelected;
+    });
   }
 }
