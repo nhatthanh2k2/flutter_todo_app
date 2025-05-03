@@ -55,6 +55,16 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
                 color: Colors.white,
               ),
             ).tr(),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(
+            Icons.arrow_back_ios_new_outlined,
+            size: 18,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: _buildBodyPageScreen(),
     );
@@ -176,7 +186,7 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
               height: 36,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(36 / 2),
-                color: _colorIconAndTextSelected ?? Colors.white,
+                color: _colorIconAndTextSelected,
               ),
             ),
           ),
@@ -204,7 +214,7 @@ class _CreateOrEditCategoryState extends State<CreateOrEditCategory> {
               height: 36,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(36 / 2),
-                color: _colorBackgroundSelected ?? Colors.white,
+                color: _colorBackgroundSelected,
               ),
             ),
           ),

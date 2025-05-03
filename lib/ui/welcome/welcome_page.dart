@@ -1,6 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import '../login/login_page.dart';
+import '../register/register_page.dart';
+
 class WelcomePage extends StatelessWidget {
   final bool isFirstTimeInstall;
 
@@ -77,36 +80,36 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildButtonChangeLanguage(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      child: ElevatedButton(
-        onPressed: () {
-          final currentLocale = context.locale.toString();
-          if (currentLocale == "en") {
-            context.setLocale(const Locale("vi"));
-          } else {
-            context.setLocale(const Locale("en"));
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0XFF8875FF),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        ),
-        child: Text(
-          "Change Language",
-          style: TextStyle(
-            fontSize: 16,
-            fontFamily: "Lato",
-            color: Colors.white,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildButtonChangeLanguage(BuildContext context) {
+  //   return Container(
+  //     width: double.infinity,
+  //     height: 48,
+  //     padding: const EdgeInsets.symmetric(horizontal: 24),
+  //     margin: const EdgeInsets.symmetric(vertical: 10),
+  //     child: ElevatedButton(
+  //       onPressed: () {
+  //         final currentLocale = context.locale.toString();
+  //         if (currentLocale == "en") {
+  //           context.setLocale(const Locale("vi"));
+  //         } else {
+  //           context.setLocale(const Locale("en"));
+  //         }
+  //       },
+  //       style: ElevatedButton.styleFrom(
+  //         backgroundColor: const Color(0XFF8875FF),
+  //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+  //       ),
+  //       child: Text(
+  //         "Change Language",
+  //         style: TextStyle(
+  //           fontSize: 16,
+  //           fontFamily: "Lato",
+  //           color: Colors.white,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildButtonLogin() {
     return Container(
@@ -153,6 +156,20 @@ class WelcomePage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _goToRegisterPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RegisterPage()),
+    );
+  }
+
+  void _goToLoginPage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
     );
   }
 }

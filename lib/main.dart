@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:todo_app/ui/main/main_page.dart';
+import 'package:todo_app/ui/login/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -9,9 +9,9 @@ void main() async {
 
   runApp(
     EasyLocalization(
-      child: const TodoApp(),
       supportedLocales: const [Locale("vi"), Locale("en")],
       path: "assets/translations",
+      child: const TodoApp(),
     ),
   );
 }
@@ -33,7 +33,7 @@ class TodoApp extends StatelessWidget {
       locale: context.locale,
       supportedLocales: context.supportedLocales,
       debugShowCheckedModeBanner: false,
-      home: const MainPage(),
+      home: const LoginPage(),
     );
   }
 }
