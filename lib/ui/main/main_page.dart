@@ -28,6 +28,21 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF121212),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        leading: IconButton(
+          icon: Icon(Icons.menu, color: Colors.white.withValues(alpha: 0.87)),
+          onPressed: () {},
+        ),
+        title: Text(
+          'Index',
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.87),
+            fontSize: 20,
+          ),
+        ),
+        centerTitle: true,
+      ),
       body: _pages.elementAt(_currentPage),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFF363636),

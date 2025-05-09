@@ -2,8 +2,17 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/ui/login/login_page.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _fromRegisterKey = GlobalKey<FormState>();
+  var _autoValidateMode = AutovalidateMode.disabled;
+  String _password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class RegisterPage extends StatelessWidget {
             children: [
               _buildPageTitle(),
               const SizedBox(height: 53),
-              _buildFormLogin(),
+              _buildFormRegister(),
               _buildOrSplitDivider(),
               _buildSocialLogin(),
               _buildHaveAccount(context),
@@ -59,8 +68,10 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  Widget _buildFormLogin() {
+  Widget _buildFormRegister() {
     return Form(
+      key: _fromRegisterKey,
+      autovalidateMode: _autoValidateMode,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -108,6 +119,19 @@ class RegisterPage extends StatelessWidget {
               fillColor: Color(0xFF1D1D1D),
               filled: true,
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Email is required";
+              }
+              final emailRegex = RegExp(
+                r"^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9])*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+              );
+
+              if (!emailRegex.hasMatch(value)) {
+                return "Enter a valid email address";
+              }
+              return null;
+            },
             style: TextStyle(
               color: Colors.white,
               fontFamily: "Lato",
@@ -135,6 +159,9 @@ class RegisterPage extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: TextFormField(
+            onChanged: (value) {
+              _password = value; // Lưu giá trị mật khẩu khi thay đổi
+            },
             decoration: InputDecoration(
               hintText: "Enter your password",
               hintStyle: TextStyle(
@@ -148,6 +175,15 @@ class RegisterPage extends StatelessWidget {
               fillColor: Color(0xFF1D1D1D),
               filled: true,
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Password is required";
+              }
+              if (value.length < 8) {
+                return "Must contain at least one special character";
+              }
+              return null;
+            },
             style: TextStyle(
               color: Colors.white,
               fontFamily: "Lato",
@@ -189,6 +225,15 @@ class RegisterPage extends StatelessWidget {
               fillColor: Color(0xFF1D1D1D),
               filled: true,
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Confirm password is required";
+              }
+              if (value != _password) {
+                return "The password and confirmation password do not match.";
+              }
+              return null;
+            },
             style: TextStyle(
               color: Colors.white,
               fontFamily: "Lato",
@@ -207,7 +252,7 @@ class RegisterPage extends StatelessWidget {
       height: 48,
       margin: EdgeInsets.only(top: 70),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: _onHandleRegisterAccount,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0XFF8875FF),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -377,6 +422,13 @@ class RegisterPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onHandleRegisterAccount() {
+    if (_autoValidateMode == AutovalidateMode.disabled) {
+      _autoValidateMode = AutovalidateMode.always;
+    }
+    final isValid = _fromRegisterKey.currentState?.validate() ?? false;
   }
 
   void _goToLoginPage(BuildContext context) {

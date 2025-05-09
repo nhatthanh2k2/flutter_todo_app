@@ -1,9 +1,48 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/ui/login/bloc/login_cubit.dart';
 import 'package:todo_app/ui/register/register_page.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      // backgroundColor: Color(0xFF121212),
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   leading: IconButton(
+      //     onPressed: () {
+      //       if (Navigator.canPop(context)) {
+      //         Navigator.pop(context);
+      //       }
+      //     },
+      //     icon: Icon(
+      //       Icons.arrow_back_ios_new_outlined,
+      //       size: 18,
+      //       color: Colors.white,
+      //     ),
+      //   ),
+      // ),
+      body: BlocProvider(create: (context) => LoginCubit(), child: LoginView()),
+    );
+  }
+}
+
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _formLoginKey = GlobalKey<FormState>();
+  var _autoValidateMode = AutovalidateMode.disabled;
+  var _emailTextController = TextEditingController();
+  var _passwordTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +100,8 @@ class LoginPage extends StatelessWidget {
 
   Widget _buildFormLogin() {
     return Form(
+      key: _formLoginKey,
+      autovalidateMode: _autoValidateMode,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
@@ -93,6 +134,7 @@ class LoginPage extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: TextFormField(
+            controller: _emailTextController,
             decoration: InputDecoration(
               hintText: "Enter your Username",
               hintStyle: TextStyle(
@@ -106,6 +148,19 @@ class LoginPage extends StatelessWidget {
               fillColor: Color(0xFF1D1D1D),
               filled: true,
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Email is required";
+              }
+              final emailRegex = RegExp(
+                r"^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9])*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+              );
+
+              if (!emailRegex.hasMatch(value)) {
+                return "Enter a valid email address";
+              }
+              return null;
+            },
             style: TextStyle(
               color: Colors.white,
               fontFamily: "Lato",
@@ -133,6 +188,7 @@ class LoginPage extends StatelessWidget {
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: TextFormField(
+            controller: _passwordTextController,
             decoration: InputDecoration(
               hintText: "Enter your password",
               hintStyle: TextStyle(
@@ -146,6 +202,15 @@ class LoginPage extends StatelessWidget {
               fillColor: Color(0xFF1D1D1D),
               filled: true,
             ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Password is required";
+              }
+              if (value.length < 8) {
+                return "Must contain at least one special character";
+              }
+              return null;
+            },
             style: TextStyle(
               color: Colors.white,
               fontFamily: "Lato",
@@ -164,7 +229,7 @@ class LoginPage extends StatelessWidget {
       height: 48,
       margin: EdgeInsets.only(top: 70),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: _onHandleLoginSubmit,
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0XFF8875FF),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
@@ -334,6 +399,21 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onHandleLoginSubmit() {
+    final loginCubit = BlocProvider.of<LoginCubit>(context);
+    final email = _emailTextController.text;
+    final password = _passwordTextController.text;
+    loginCubit.login(email, password);
+
+    if (_autoValidateMode == AutovalidateMode.disabled) {
+      setState(() {
+        _autoValidateMode = AutovalidateMode.always;
+      });
+    }
+
+    final isValid = _formLoginKey.currentState?.validate() ?? false;
   }
 
   void _goToRegisterPage(BuildContext context) {
