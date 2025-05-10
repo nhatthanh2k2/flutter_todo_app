@@ -1,6 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/auth/authentication_repository.dart';
 import 'package:todo_app/ui/login/login_page.dart';
+import 'package:todo_app/ui/register/bloc/register_cubit.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -10,9 +13,36 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) {
+        final authenticationRepository =
+            context.read<AuthenticationRepository>();
+        return RegisterCubit(
+          authenticationRepository: authenticationRepository,
+        );
+      },
+      child: RegisterView(),
+    );
+  }
+}
+
+class RegisterView extends StatefulWidget {
+  const RegisterView({super.key});
+
+  @override
+  State<RegisterView> createState() => _RegisterViewState();
+}
+
+class _RegisterViewState extends State<RegisterView> {
   final _fromRegisterKey = GlobalKey<FormState>();
   var _autoValidateMode = AutovalidateMode.disabled;
   String _password = '';
+
+  final _emailTextController = TextEditingController();
+  final _passwordTextController = TextEditingController();
+  final _confirmPasswordTextController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +113,7 @@ class _RegisterPageState extends State<RegisterPage> {
             _buildPasswordField(),
             const SizedBox(height: 25),
             _buildConfirmPasswordField(),
-            _buildLoginButton(),
+            _buildRegisterButton(),
           ],
         ),
       ),
@@ -106,6 +136,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: TextFormField(
+            controller: _emailTextController,
             decoration: InputDecoration(
               hintText: "Enter your Username",
               hintStyle: TextStyle(
@@ -159,6 +190,7 @@ class _RegisterPageState extends State<RegisterPage> {
         Container(
           margin: const EdgeInsets.only(top: 8),
           child: TextFormField(
+            controller: _passwordTextController,
             onChanged: (value) {
               _password = value; // Lưu giá trị mật khẩu khi thay đổi
             },
@@ -246,7 +278,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildRegisterButton() {
     return Container(
       width: double.infinity,
       height: 48,
@@ -262,7 +294,7 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
 
         child: Text(
-          "Login",
+          "Register",
           style: TextStyle(
             fontSize: 16,
             fontFamily: "Lato",
@@ -425,10 +457,14 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void _onHandleRegisterAccount() {
-    if (_autoValidateMode == AutovalidateMode.disabled) {
-      _autoValidateMode = AutovalidateMode.always;
-    }
-    final isValid = _fromRegisterKey.currentState?.validate() ?? false;
+    final registerCubit = context.read<RegisterCubit>();
+    final email = _emailTextController.text;
+    final password = _passwordTextController.text;
+    registerCubit.register(email, password);
+    // if (_autoValidateMode == AutovalidateMode.disabled) {
+    //   _autoValidateMode = AutovalidateMode.always;
+    // }
+    // final isValid = _fromRegisterKey.currentState?.validate() ?? false;
   }
 
   void _goToLoginPage(BuildContext context) {

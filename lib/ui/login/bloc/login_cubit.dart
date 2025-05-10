@@ -1,12 +1,21 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/auth/authentication_repository.dart';
 
 part 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit() : super(const LoginState(""));
+  final AuthenticationRepository authenticationRepository;
 
-  void login(String email, String password) {
-    print("Login with email: $email and password: $password");
+  LoginCubit({required this.authenticationRepository})
+    : super(const LoginState(""));
+
+  Future<void> login(String email, String password) async {
+    try {
+      await authenticationRepository.loginWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } catch (e) {}
   }
 }

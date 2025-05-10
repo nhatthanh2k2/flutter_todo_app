@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/auth/authentication_repository.dart';
 import 'package:todo_app/ui/login/bloc/login_cubit.dart';
 import 'package:todo_app/ui/register/register_page.dart';
 
@@ -26,7 +27,14 @@ class LoginPage extends StatelessWidget {
       //     ),
       //   ),
       // ),
-      body: BlocProvider(create: (context) => LoginCubit(), child: LoginView()),
+      body: BlocProvider(
+        create: (context) {
+          final authenticationRepository =
+              context.read<AuthenticationRepository>();
+          return LoginCubit(authenticationRepository: authenticationRepository);
+        },
+        child: LoginView(),
+      ),
     );
   }
 }
